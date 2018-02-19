@@ -1,0 +1,15 @@
+.wall {
+    background-color: black;
+}
+.plant {
+    background-color: green;
+    border-radius: 4px;
+}
+.smartplanteater {
+    background-color: brown;
+    border-radius: 4px;
+}
+.predator {
+    background-color: red;
+    border-radius: 4px;
+}

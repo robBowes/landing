@@ -10,34 +10,24 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 
+
 app.get('//', (req, res)=>{
     console.log(req.url);
     res.render('index');
 })
 
+app.post('//',(request, response)=>{
+    response.render('circle_of_life')
+})
 
-app.get('//bootstrap.css', (request, response)=>{
-    console.log('css loads');
-    let options ={
-        root: __dirname,
-        dotfiles: 'deny',
-        headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true,
-        },
-    };
-    // let filename = request.params.name;
-    response.sendFile('/views/css/bootstrap.css', options, (err)=>{
-        if (err) console.log(err);
-        else console.log('Sent bootstrap.css file');
-    });
-});
 /*
-* Return requests for client side code
+* Return requests for public files
 */
-app.get('//code.js', (request, response, next)=>{
+app.get('*public*', (request, response, next)=>{
+    let fileName = request.url.slice(9);
+    console.log('Request file: ' + fileName);
     let options ={
-        root: __dirname,
+        root: __dirname+'/public',
         dotfiles: 'deny',
         headers: {
             'x-timestamp': Date.now(),
@@ -45,11 +35,14 @@ app.get('//code.js', (request, response, next)=>{
         },
     };
     // let filename = request.params.name;
-    response.sendFile('code.js', options, (err)=>{
+    response.sendFile(fileName, options, (err)=>{
         if (err) console.log(err);
-        else console.log('Sent code.js file');
+        else console.log('Sent '+fileName+' file');
     });
 });
-
+// app.get('*', (req, res)=>{
+//     console.log('incoming url: '+req.url);
+//     res.render('index');
+// })
 app.listen('8000');
 console.log('Landing app loaded on port 8000...');
