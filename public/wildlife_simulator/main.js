@@ -1,9 +1,12 @@
 $(function() {
+    /*
+    * Add stylesheet to page
+    */
+    $('head').append('<link rel="stylesheet" type="text/css" href="/node/public/wildlife_simulator/style.css">');
     var world = new LifelikeWorld(plan, {"#": Wall,
         "~": Plant, "8": SmartPlantEater, "@": Predator});
     $("#gameworld").html(world.toString());
     var animate = (speed) => {
-
         return setInterval(function() {
             world.turn();
             $("#gameworld").html(world.toString());
@@ -21,7 +24,7 @@ $(function() {
             stop = animate(100);
         };
     });
-    $("#stop").click(clear);
+    $("#stop").on('click', ()=>{clear()});
 });
 
 

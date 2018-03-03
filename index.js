@@ -4,7 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 let app = express();
-app.use(bodyParser.json());
+let jsonParser = bodyParser.json();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -17,6 +17,7 @@ app.get('//', (req, res)=>{
 })
 
 app.post('//',(request, response)=>{
+    console.log(request.body);
     response.render('circle_of_life')
 })
 
@@ -25,7 +26,7 @@ app.post('//',(request, response)=>{
 */
 app.get('*public*', (request, response, next)=>{
     let fileName = request.url.slice(9);
-    console.log('Request file: ' + fileName);
+    console.log('Incoming file request: public/' + fileName);
     let options ={
         root: __dirname+'/public',
         dotfiles: 'deny',
@@ -40,9 +41,6 @@ app.get('*public*', (request, response, next)=>{
         else console.log('Sent '+fileName+' file');
     });
 });
-// app.get('*', (req, res)=>{
-//     console.log('incoming url: '+req.url);
-//     res.render('index');
-// })
+
 app.listen('8000');
 console.log('Landing app loaded on port 8000...');
