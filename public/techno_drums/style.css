@@ -1,0 +1,22 @@
+.keys {
+    margin-bottom: 1em;
+}
+
+.key {
+    font-size: 1.25em;
+    text-align: center;
+    width: 90px;
+    height: 90px;
+    padding: 1em;
+    border: 1px solid white;
+    border-radius: 5px;
+    display: inline-block;
+    background: rgba(0,0,0,0.4);
+    transition: all 0.1s;
+}
+
+.playing {
+    transform: scale(1.1);
+    border-color: blue;
+    box-shadow: 0 0 10px black;
+}

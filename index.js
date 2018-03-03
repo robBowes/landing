@@ -5,6 +5,11 @@ const bodyParser = require('body-parser');
 
 let app = express();
 let jsonParser = bodyParser.json();
+let urlencodedParser= bodyParser.urlencoded();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true,
+}));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -15,10 +20,9 @@ app.get('//', (req, res)=>{
     console.log(req.url);
     res.render('index');
 })
-
 app.post('//',(request, response)=>{
-    console.log(request.body);
-    response.render('circle_of_life')
+    console.log('Post request for page: ' + request.body.eventId);
+    response.render(request.body.eventId)
 })
 
 /*
