@@ -20,6 +20,14 @@ app.get('//', (req, res)=>{
     console.log(req.url);
     res.render('index');
 })
+
+app.get('//projects*', (req, res)=>{
+    console.log(req.url.slice(11));
+    res.render('projects', {
+        'page': req.url.slice(11)
+    });
+})
+
 app.post('//',(request, response)=>{
     console.log('Post request for page: ' + request.body.eventId);
     response.render(request.body.eventId)

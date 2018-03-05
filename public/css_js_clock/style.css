@@ -1,0 +1,43 @@
+.clock-area {
+    background-color: white;
+}
+.clock {
+    width: 30rem;
+    height: 30rem;
+    border: 20px solid black;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    padding: 2rem;
+
+}
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-3px); // offset to account for clock hands
+}
+
+
+
+.hand {
+    width: 50%;
+    height: 6px;
+    background: black;
+    position: absolute;
+    top: 50%;
+    transform-origin: 100%;
+    transform: rotate(90deg);
+    transition: all 0.5s;
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+}
+
+.hour-hand {
+    margin: auto 10%;
+    width: 40%;
+}
+
+.minute-hand {
+    margin: auto 5%;
+    width: 45%;
+}
