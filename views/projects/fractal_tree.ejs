@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">
+            Project #8
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">Fractal Tree</h3>
+            <div class="card-text">
+                <p>
+                    I initially saw fractal trees written in Javascript in <a href="http://eloquentjavascript.net/">Eloquest Javascript</a> and I knew immediately I was interested in writing this code. I hadn't gotten around to it until I saw a tutorial for doing fractal trees in P5 on <a href="https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw">The Coding Train</a>.
+                </p>
+                <p>
+                    I followed the general outline set down by Daniel Shiffman in the tutorial, but took a lot of liberty in my code. P5 loops the draw function by default, but this is very processing intensive. Since the fractal tree is static most of the time, I decided to only redraw the tree when the parameters are changed using the sliders above the canvas. I also limited the number of branches drawn to 20 000 so as not to overload the browser. Both of these tweaks made my version of the fractal tree much more friendly to my laptop.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="angle">Angle: </label>
+    <input type="range" name="angle" value="10" min="1" max="100" id="angle_slider">
+</div>
+
+<div class="form-group">
+    <label for="length">Length: </label>
+    <input type="range" name="length" value="25" min="1" max="100" id="length_slider">
+</div>
+
+
+<div class="form-group">
+    <label for="branch_length">Branch Length: </label>
+    <input type="range" name="branch_length" value="67" min="5" max="100" id="branch_slider">
+</div>
+
+
+<div class="" id="sketch-holder"></div>
+
+<script type="text/javascript" src="/node/public/fractal_tree/sketch.js"></script>
+<script type="text/javascript" src="/node/public/p5.min.js"></script>
+<!-- <script type="text/javascript" src="/node/public/p5.dom.min.js"></script> -->

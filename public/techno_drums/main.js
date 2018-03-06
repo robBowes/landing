@@ -7,7 +7,7 @@ $(()=>{
     $('body').keydown((event)=>{
         const audio = $(`audio[data-key*=${event.keyCode}]`);
         const key = $(`.key[data-key*=${event.keyCode}]`);
-        console.log(event.keyCode);
+        // console.log(event.keyCode);
         if (!audio[0]) return; // if the key has no audio element stop the function
         key.toggleClass('playing');
         audio[0].currentTime = 0; // start the audio from the begining
