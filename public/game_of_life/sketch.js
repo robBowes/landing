@@ -7,9 +7,10 @@ make2DArray = (cols, rows) =>{
 }
 
 let grid;
+let nextGen;
 let cols;
 let rows;
-let resolution = 20;
+let resolution = 10;
 
 function setup() {
     let canvas = createCanvas(600, 400);
@@ -19,52 +20,59 @@ function setup() {
     grid = make2DArray(cols, rows);
     for (let col of grid) {
         for (let i = 0; i < col.length; i++) {
-            col[i] = floor(random(2));
+            col[i] = floor(random(1.5));
         }
+    }
+    nextGen = make2DArray(cols, rows);
+    for (let i = 0; i < nextGen.length; i++) {
+        nextGen[i].fill(0);
     }
 }
 
 function draw() {
-    frameRate(8);
+    frameRate(6);
     background(0);
-    let nextGen = make2DArray(cols, rows);
-    for (let i = 0; i < nextGen.length; i++) {
-        nextGen[i].fill(0);
-    }
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let x = i * resolution;
             let y = j * resolution;
             if (grid[i][j] == 1) {
-                fill('black');
-                rect(x, y, resolution, resolution);
-            } else {
+                // fill('black');
+                // rect(x, y, resolution, resolution);
+            } else if (grid[i][j] == 0) {
                 fill('white');
                 rect(x, y, resolution, resolution);
             }
         }
     }
+
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let sum = 0;
             for (let h = -1; h < 2; h++){
                 for (let k = -1; k < 2; k++){
-                    if (i+h>0 && j+k>0 && i+h<cols && j+k<rows) {
+                    if (i+h>=0 && j+k>=0 && i+h<cols && j+k<rows){
                         sum += grid[i+h][j+k]; // make a sum of all the tiles surrouning the current tile
                     }
                 }
             }
             sum -= grid[i][j];
-            if (grid[i][j] == 1 && sum < 2) {
+            if (grid[i][j] === 1 && sum < 2) {
                 nextGen[i][j] = 0;
-            } else if (grid[i][j] == 1 && (sum == 2 || sum == 3)) {
+            } else if (grid[i][j] === 1 && (sum === 2 || sum === 3)) {
                 nextGen[i][j] = 1;
-            } else if (grid[i][j] == 1 && sum > 3) {
+            } else if (grid[i][j] === 1 && sum > 3) {
                 nextGen[i][j] = 0;
-            } else if (grid[i][j] == 0 && sum == 3) {
+            } else if (grid[i][j] === 0 && sum === 3) {
                 nextGen[i][j] = 1;
             }
         }
     }
-    grid = nextGen;
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            grid[i][j] = nextGen[i][j];
+            nextGen[i][j] = 0;
+        }
+    }
+
 }
