@@ -9225,3 +9225,10 @@ legend,
 .popover-title {
   border-bottom: none;
 }
+
+canvas {
+    display: block;
+    margin: auto;
+    padding: 1rem;
+    text-align: center;
+}

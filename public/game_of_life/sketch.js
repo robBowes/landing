@@ -4,7 +4,7 @@ make2DArray = (cols, rows) =>{
         arr[i] = new Array(rows);
     }
     return arr;
-}
+};
 
 let grid;
 let nextGen;
@@ -49,9 +49,9 @@ function draw() {
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let sum = 0;
-            for (let h = -1; h < 2; h++){
-                for (let k = -1; k < 2; k++){
-                    if (i+h>=0 && j+k>=0 && i+h<cols && j+k<rows){
+            for (let h = -1; h < 2; h++) {
+                for (let k = -1; k < 2; k++) {
+                    if (i+h>=0 && j+k>=0 && i+h<cols && j+k<rows) {
                         sum += grid[i+h][j+k]; // make a sum of all the tiles surrouning the current tile
                     }
                 }
@@ -74,5 +74,4 @@ function draw() {
             nextGen[i][j] = 0;
         }
     }
-
 }
