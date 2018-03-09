@@ -9,18 +9,15 @@ class Branch {
     }
 
     show() {
+        colorMode(HSB);
         if (this.isLast) {
-            // this.color = color('white');
-            // stroke(this.color);
             stroke('green');
-            line(this.initial.x, this.initial.y, this.final.x , this.final.y);
-            stroke(Math.max(this.i/this.axiomLength*255, 55));
+            line(this.initial.x, this.initial.y, this.final.x, this.final.y);
+            stroke(this.i/this.axiomLength*200+55);
             noFill();
-            ellipse(this.final.x, this.final.y, 1,1)
+            ellipse(this.final.x, this.final.y, 1, 1);
         } else {
-            // this.color = color(random(100, 150), random(60, 80), random(15, 30));
-            // stroke(this.color);
-            stroke(0,59,41);
+            stroke(0, 59, 41);
             line(this.initial.x, this.initial.y, this.final.x, this.final.y);
         }
     }
@@ -34,17 +31,21 @@ class Tree {
         this.angle = args.angle;
         this.axiomRules = args.axiomRules;
         this.n = args.n;
-        this.currentAngle = 0;
+        this.currentAngle = args.currentAngle || 0;
         this.distanceFromBase = 0;
         this.branches = [];
         this.drawSettings = [];
+        this.lastBranchShown = 2;
     }
 
     newBranch(i) {
         let next = createVector(0, -this.branchLength);
         next.rotate(this.currentAngle);
         let nextEnd = p5.Vector.add(this.currentLocation, next);
-        this.branches.push(new Branch(this.currentLocation, nextEnd, this.distanceFromBase, this.axiom.length, i));
+        this.branches.push(
+            new Branch(this.currentLocation, nextEnd,
+                this.distanceFromBase, this.axiom.length, i
+            ));
         this.currentLocation = nextEnd;
         this.distanceFromBase++;
     }
@@ -63,5 +64,14 @@ class Tree {
             'angle': this.currentAngle,
             'distanceFromBase': this.distanceFromBase,
         });
+    }
+
+    show() {
+        if (this.branches[this.lastBranchShown]) {
+            this.branches[this.lastBranchShown].show();
+            this.branches[this.lastBranchShown-1].show();
+            this.branches[this.lastBranchShown-2].show();
+        }
+        this.lastBranchShown+=2;
     }
 }

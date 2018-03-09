@@ -1,4 +1,8 @@
-
+/*
+* First we create some trees to draw. The axioms for these trees are all from
+* http://algorithmicbotany.org/papers/abop/abop-ch1.pdf
+*
+*/
 let treeA = new Tree({
     'axiom': 'F',
     'branchLength': 2,
@@ -28,6 +32,7 @@ let treeC = new Tree({
     }],
     'angle': -22.5*Math.PI/180,
     'n': 4,
+    'currentAngle': -Math.PI/12,
 });
 let treeD = new Tree({
     'axiom': 'X',
@@ -72,48 +77,45 @@ let treeF = new Tree({
     'n': 5,
 });
 
+/*
+* Put the trees into an array
+*/
 let trees = [treeB, treeA, treeC, treeD, treeE, treeF];
 // let trees = [treeA];
-
-let interpreterRules = [];
-
 
 setup = () => {
     let canvas = createCanvas(1200, 800);
     canvas.parent('sketch-holder');
     background(0);
-    colorMode(HSB);
-    let count = width/(trees.length+1);
+    /*
+    * The location to draw the treeBase
+    */
+    let treeBase = width/(trees.length+1);
+    /*
+    * Iterate through the array of trees and give them bases along the bottom of
+    * the createCanvas
+    */
     for (let tree of trees) {
-        tree.currentLocation = createVector(count, height);
-        count+=width/(trees.length+1);
+        tree.currentLocation = createVector(treeBase, height);
+        treeBase+=width/(trees.length+1);
+        /*
+        * using the axiom rules defined in the tree, generate the tree axioms
+        */
         for (let i = 0; i < tree.n; i++) {
             tree = generate(tree);
         }
+        /*
+        * Run the interpreter on each tree
+        */
         interpreter(tree);
-        console.dir(tree);
     }
 };
-let count = 2;
+
 draw = () => {
-    // background(0);
-    // noLoop();
     frameRate(60);
-    // for (let tree of trees) {
-    //     for (let branch of tree.branches) {
-    //         branch.show();
-    //     }
-    // }
-    // trees[0].branches[count].show();
-    // count++;
     for (let tree of trees) {
-        if (tree.branches[count]) {
-            tree.branches[count].show();
-            tree.branches[count-1].show();
-            tree.branches[count-2].show();
-        }
+        tree.show();
     }
-    count+=2;
 };
 
 
@@ -138,58 +140,57 @@ generate = (treeObj) =>{
         return treeObj;
     }
 };
-
+let interpreterRules = [
+    {
+        'case': 'F',
+        'action': (args, i)=>{
+            args.newBranch(i);
+        },
+    },
+    {
+        'case': '+',
+        'action': (args)=>{
+            args.currentAngle += args.angle;
+        },
+    },
+    {
+        'case': '-',
+        'action': (args)=>{
+            args.currentAngle -= args.angle;
+        },
+    },
+    {
+        'case': ']',
+        'action': (args)=>{
+            args.pop();
+        },
+    },
+    {
+        'case': '[',
+        'action': (args)=>{
+            args.push();
+        },
+    },
+    {
+        'case': 'X',
+        'action': (args)=>{
+        },
+    },
+];
 
 interpreter = (treeObj) =>{
-    let count = 0;
     for (let i = 0; i < treeObj.axiom.length; i++) {
         let current = treeObj.axiom[i];
         for (let rule of interpreterRules) {
-            count++;
             if (current === rule.case) {
                 rule.action(treeObj, i);
                 break;
             }
         }
     }
-    console.log(`count ${count}  string length: ${treeObj.axiom.length}`);
+    console.dir(treeObj);
+    console.log(
+        `Axiom length: ${treeObj.axiom.length}
+        Tree branches: ${treeObj.branches.length}`
+    );
 };
-
-
-(()=>{
-    interpreterRules.push({
-        'case': 'F',
-        'action': (args, i)=>{
-            args.newBranch(i);
-        },
-    });
-    interpreterRules.push({
-        'case': '+',
-        'action': (args)=>{
-            args.currentAngle += args.angle;
-        },
-    });
-    interpreterRules.push({
-        'case': '-',
-        'action': (args)=>{
-            args.currentAngle -= args.angle;
-        },
-    });
-    interpreterRules.push({
-        'case': ']',
-        'action': (args)=>{
-            args.pop();
-        },
-    });
-    interpreterRules.push({
-        'case': '[',
-        'action': (args)=>{
-            args.push();
-        },
-    });
-    interpreterRules.push({
-        'case': 'X',
-        'action': (args)=>{
-        },
-    });
-})();
