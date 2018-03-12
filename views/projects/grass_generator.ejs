@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">
+            Project #12
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">Grass Generator</h3>
+            <div class="card-text">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="">
+    <div class="controls">
+        <label for="angle">Angle</label>
+        <input type="range" name="angle" value="0" min="-90" max="90" id="angle">
+        <label for="angle">Base</label>
+        <input type="range" name="base" value="300" min="0" max="600" id="base">
+        <label for="angle">Branch Angles</label>
+        <input type="range" name="base" value="22" min="10" max="45" id="branch_angle">
+    </div>
+    <button type="button" name="button" class="btn btn-primary generate">Generate</button>
+    <button type="button" name="button" class="btn btn-primary clear">Clear</button>
+    <button type="button" name="button" class="btn btn-primary grow">Grow</button>
+    <div class="" id="sketch-holder"></div>
+</div>
+
+<script type="text/javascript" src="/node/public/grass_generator/classes.js"></script>
+<script type="text/javascript" src="/node/public/grass_generator/sketch.js"></script>
+<script type="text/javascript" src="/node/public/p5.min.js"></script>
+<!-- <script type="text/javascript" src="/node/public/p5.dom.min.js"></script> -->
