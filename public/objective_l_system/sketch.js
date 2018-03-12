@@ -47,6 +47,7 @@ let treeD = new Tree({
     }],
     'angle': 20*Math.PI/180,
     'n': 7,
+    'currentAngle': -Math.PI/12,
 });
 let treeE = new Tree({
     'axiom': 'X',
@@ -73,8 +74,9 @@ let treeF = new Tree({
         'thisGen': 'X',
         'nextGen': '→F-[[X]+X]+F[+FX]-X',
     }],
-    'angle': 22.5*Math.PI/180,
+    'angle': -22.5*Math.PI/180,
     'n': 5,
+    'currentAngle': Math.PI/12,
 });
 
 /*
@@ -99,15 +101,9 @@ setup = () => {
         tree.currentLocation = createVector(treeBase, height);
         treeBase+=width/(trees.length+1);
         /*
-        * using the axiom rules defined in the tree, generate the tree axioms
-        */
-        for (let i = 0; i < tree.n; i++) {
-            tree = generate(tree);
-        }
-        /*
         * Run the interpreter on each tree
         */
-        interpreter(tree);
+        tree.grow();
     }
 };
 
@@ -116,81 +112,4 @@ draw = () => {
     for (let tree of trees) {
         tree.show();
     }
-};
-
-
-generate = (treeObj) =>{
-    if (treeObj.axiom.length < 100000) {
-        let nextGen = '';
-        for (let i = 0; i < treeObj.axiom.length; i++) {
-            let current = treeObj.axiom.charAt(i);
-            let noMatch = true;
-            for (let i = 0; i < treeObj.axiomRules.length; i++) {
-                if (current === treeObj.axiomRules[i].thisGen) {
-                    nextGen += treeObj.axiomRules[i].nextGen;
-                    noMatch = false;
-                    break;
-                }
-            };
-            if (noMatch) {
-                nextGen += current;
-            };
-        };
-        treeObj.axiom = nextGen;
-        return treeObj;
-    }
-};
-let interpreterRules = [
-    {
-        'case': 'F',
-        'action': (args, i)=>{
-            args.newBranch(i);
-        },
-    },
-    {
-        'case': '+',
-        'action': (args)=>{
-            args.currentAngle += args.angle;
-        },
-    },
-    {
-        'case': '-',
-        'action': (args)=>{
-            args.currentAngle -= args.angle;
-        },
-    },
-    {
-        'case': ']',
-        'action': (args)=>{
-            args.pop();
-        },
-    },
-    {
-        'case': '[',
-        'action': (args)=>{
-            args.push();
-        },
-    },
-    {
-        'case': 'X',
-        'action': (args)=>{
-        },
-    },
-];
-
-interpreter = (treeObj) =>{
-    for (let i = 0; i < treeObj.axiom.length; i++) {
-        let current = treeObj.axiom[i];
-        for (let rule of interpreterRules) {
-            if (current === rule.case) {
-                rule.action(treeObj, i);
-                break;
-            }
-        }
-    }
-    console.dir(treeObj);
-    console.log(
-        `Axiom length: ${treeObj.axiom.length}
-        Tree branches: ${treeObj.branches.length}`
-    );
 };
