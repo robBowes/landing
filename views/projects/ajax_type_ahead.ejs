@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">
+            Project #22
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">Ajax Type Ahead</h3>
+            <div class="card-text">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="search-form" style="padding: 1em">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions list-group">
+        <li class="list-group-item list-group-item-action">Look for a project</li>
+    </ul>
+</div>
+<script>
+const endpoint = 'http://www.robertbowes.com/node/public/ajax_type_ahead/projects.json';
+const projects = {};
+const search = document.querySelector('.search');
+const suggestion = document.querySelector('.suggestions');
+
+search.addEventListener('change', (e)=>display(e));
+
+fetch(endpoint)
+.then(data=>data.json())
+.then(data=>Object.assign(projects,data));
+
+findMatches = (word, arr) => arr.filter(el=>{
+    const regex = new RegExp(word, 'gi');
+    return el[1].match(regex);
+})
+display = (e) => {
+    const res = findMatches(e.srcElement.value, projects.data);
+    const html = res.map(el=>{
+        return `<li class="list-group-item list-group-item-action">
+        ${el[1]}
+        <ul>
+        <li>
+        ${el[5]}
+        </li>
+        <li>
+        ${el[7]}
+        </li>
+
+
+        </ul>
+        </li>`
+    }).join('');
+    suggestion.innerHTML = html;
+}
+
+</script>
