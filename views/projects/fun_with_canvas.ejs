@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-header">
+            Project #24
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">Fun with the HTML 5 Canvas</h3>
+            <div class="card-text">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="">
+    <canvas id="draw" width="600" height="600"></canvas>
+    <script type="text/javascript">
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d');
+    canvas.addEventListener('mousemove', (e)=>draw(e));
+    canvas.addEventListener('mousedown', (e)=>{
+        [lastX, lastY] = [e.offsetX, e.offsetY]
+        isDrawing=true
+    });
+    canvas.addEventListener('mouseup', (e)=>isDrawing=false);
+    canvas.addEventListener('mouseout', (e)=>isDrawing=false);
+    ctx.linJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.rect(0, 0, 600, 600);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    let lineWidth = 50;
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let hue = 0;
+    let lineDir = 1;
+    draw = (e) => {
+        if (!isDrawing) return;
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY]
+        if (lineWidth >100 || lineWidth<1) lineDir*=-1;
+        lineWidth+=lineDir;
+        hue++;
+    };
+    </script>
+</div>
