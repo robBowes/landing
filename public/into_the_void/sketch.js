@@ -1,96 +1,76 @@
-let things;
-let world;
-let attractor;
+let creatures;
+let attractors;
 
 setup = () => {
     let canvas = createCanvas(600, 600);
     canvas.parent('sketch-holder');
-    things = Array(1).fill().map(e => new Thing({
-        'pos': createVector(random(width), random(height)),
-    }));
-    attractor = new Attractor();
-    world = [
-        attractor,
-        ...things,
-    ];
+    creatures = Array(100).fill().map(el => new Creature());
+    attractors = Array(1).fill().map(el => new Attractor());
+    mousePressed = () => reset(creatures);
+    mouseMoved = () => {
+        attractors[0].pos.x = mouseX;
+        attractors[0].pos.y = mouseY;
+    };
 };
 
 draw = () => {
-    frameRate(2);
-    background(0);
-    drawWorld(world);
-    world = updateWorld(world);
-};
-
-class Thing {
-    constructor(args) {
-        this.vel = createVector(0, -2);
-        this.acc = createVector(0, 0);
-        // this.dir = 0;
-        this.desire = 0;
-        this.pos = args.pos;
-        this.maxSpeed = 2;
-        this.maxAcc = 1;
-        this.type = 'thing';
-    }
-}
-
-class Attractor extends Thing {
-    constructor() {
-        super({
-            'pos': createVector(width / 2, height / 2),
-        });
-        this.vel = createVector(0, 0);
-        this.perim = 100;
-        this.type = 'hole';
-    }
-};
-
-drawThing = (thing) => {
-    push();
-    stroke('white');
-    translate(thing.pos.x, thing.pos.y);
-    // let dir = thing.vel.copy().heading()
-    // rotate(dir);
-    triangle(0, 0, 10, -10, -10, -10);
-    // rotate(-thing.vel.heading() + PI);
-    pop();
-};
-
-drawAttractor = (obj) => {
-    stroke(255);
-    noFill();
-    ellipse(obj.pos.x, obj.pos.y, 4);
-};
-
-drawWorld = (world) => world.forEach(el => {
-    if (el instanceof Attractor) drawAttractor(el);
-    else if (el instanceof Thing) drawThing(el);
-});
-
-updateWorld = (world) => {
-    return world.map(el => {
-        if (el.type == 'thing') el.acc = desire(el, world[0]);
-        move(el);
+    background('gray');
+    creatures = creatures.map(el => {
+        el = move(el, attractors);
+        el = findDesire(el, attractors);
         return el;
     });
+    [...creatures, ...attractors].forEach(el => show(el));
 };
 
-move = (obj) => {
-    obj.pos = p5.Vector.add(obj.pos, obj.vel);
-    obj.vel = p5.Vector.sub(obj.acc, obj.vel);
-    // if (obj.vel.mag() > obj.maxSpeed) obj.vel.setMag(obj.maxSpeed);
-    return obj;
-};
-
-desire = (obj, attractor) => {
-    let dir = p5.Vector.sub(attractor.pos, obj.pos);
-    console.log(dir);
-    if (dir.mag() < attractor.perim) {
-        //console.log(map(dir.mag(), 0, 400, 0, obj.maxSpeed));
-        dir = dir.setMag(map(dir.mag(), 0, 50, 0, obj.maxSpeed));
-    } else {
-        dir.setMag(obj.maxSpeed);
+class Creature {
+    constructor() {
+        this.pos = createVector(Math.random() * width, Math.random() * height);
+        this.dir = createVector(0, -2);
+        this.desire = createVector(0, 0);
+        this.MAX_SPEED = 4;
+        this.size = 4;
+        this.color = 'white';
     }
-    return dir;
+}
+class Attractor {
+    constructor() {
+        this.pos = createVector(Math.random() * width, Math.random() * height);
+        this.radius = 100;
+        this.size = 50;
+        this.color = 'black';
+    }
+}
+show = (element) => {
+    noStroke();
+    fill(element.color);
+    ellipse(element.pos.x, element.pos.y, element.size);
+};
+move = (element, attractors) => {
+    element.pos.add(element.dir);
+    element.dir.sub(element.desire);
+    if (element.dir.mag() > element.MAX_SPEED) {
+        element.dir.setMag(element.MAX_SPEED);
+    }
+    attractors.filter(att => p5.Vector.dist(att.pos, element.pos) < 100)
+        .forEach(att => element.dir.mult(p5.Vector.dist(att.pos, element.pos) / 100));
+    if (element.pos.dist(attractors[0].pos) <= 25) {
+        let a = random(1);
+        random(1) > 0.5 ? element.pos = createVector(Math.round(a) * width, random(height)) :
+            element.pos = createVector(random(width), Math.round(a) * height);
+    }
+    return element;
+};
+findDesire = (element, attractors) => {
+    element.desire = attractors.reduce(
+            (a, b) => a.sub(b.pos.copy().sub(element.pos)), createVector(0, 0))
+        .div(attractors.length)
+        .setMag(1);
+    return element;
+};
+reset = (creatures) => {
+    return creatures.map(creature => {
+        creature.pos = createVector(Math.random() * width, Math.random() * height);
+        return creature;
+    });
 };
