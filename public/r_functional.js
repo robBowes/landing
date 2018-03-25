@@ -1,4 +1,64 @@
 /**
+ * Unknown - Description
+ *
+ * @param {type} name   Description
+ * @param {type} method Description
+ *
+ * @return {type} Description
+ */
+invoker = (name, method) => (target, ...args) => {
+    if (!existy(target)) console.log('fail');
+    let targetMethod = target[name];
+    return doWhen((existy(targetMethod) && method == targetMethod),
+        () => targetMethod.call(target, ...args));
+};
+/**
+ * Always returns a function that always returns the initial parameter
+ *
+ * @param {*} value Any value to always return
+ *
+ * @return {*} Same as value
+ */
+always = (value) => () => value;
+/**
+ * iterateUntil creates an array by iterating through a funtion until a check
+ *  has been met
+ *
+ * @param {function} fun   Description
+ * @param {function} check Description
+ * @param {*} init  Initial value
+ *
+ * @return {array} Filled array
+ */
+iterateUntil = (fun, check, init) => {
+    let ret = [];
+    let result = fun(init);
+    while (check(result)) {
+        ret.push(result);
+        result = fun(result);
+    }
+    return ret;
+};
+
+/**
+ * Returns an array filled with the result of foo
+ *
+ * @param {int} times Length of array
+ * @param {function} foo Function
+ *
+ * @return {array} Description
+ */
+repeatedly = (times, foo) => Array(times).fill().map(foo);
+/**
+ * Repeat returns an array filled with value
+ *
+ * @param {int} times Number of times to repeat
+ * @param {*} value Object or primitive to fill the array with
+ *
+ * @return {array} Description
+ */
+repeat = (times, value) => Array(times).fill().map(e => value);
+/**
  * Best - A tighter version of finder. Finds the best value in a collection
  * given a function
  *
@@ -162,7 +222,15 @@ complement = (pred) => {
     };
 };
 
-// Excecute the name if it exists on the target
+
+/**
+ * Excecute the name if it exists on the target
+ *
+ * @param {object} target Description
+ * @param {string} name   Description
+ *
+ * @return {*} Result of the operation or undefined
+ */
 executeIfHasField = (target, name) => {
     return doWhen(existy(target[name]), () => {
         let result = _.result(target, name);
@@ -172,12 +240,33 @@ executeIfHasField = (target, name) => {
 };
 
 
+/**
+ * Return the truthyness of the parameter
+ *
+ * @param {*} x Parameter
+ *
+ * @return {bool} Truthiness of parameter
+ */
 truthy = (x) => (x != false) && existy(x);
 
 
+/**
+ * Return if the parameter exists
+ *
+ * @param {*} x Anything
+ *
+ * @return {bool} The existance of the parameter
+ */
 existy = (x) => x != null;
 
-// perform action when cond is truthy
+/**
+ * Do an action if the condition is true
+ *
+ * @param {*} cond
+ * @param {function} action
+ *
+ * @return {*}
+ */
 doWhen = (cond, action) => {
     if (truthy(cond)) return action();
     else return undefined;
